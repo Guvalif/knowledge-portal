@@ -1,42 +1,9 @@
-import xs, { type Stream } from 'xstream';
+import { type Stream } from 'xstream';
 import { type MainDOMSource, type VNode } from '@cycle/dom';
-import { jsx } from 'snabbdom';
-import { type SupabaseSource, type SupabaseSink, type SupabaseIncoming } from './supabase';
+import { type SupabaseSource, type SupabaseSink } from './supabase';
+import { NavigationBar } from './interaction-domain/NavigationBar';
 
-type State = Stream<SupabaseIncoming[1]>;
-type View = Stream<VNode>;
-
-function intent(dom$: MainDOMSource): SupabaseSink {
-  const signIn$ = dom$
-    .select('.App__signInButton')
-    .events('click')
-    .mapTo('signedIn' as const);
-  
-  const signOut$ = dom$
-    .select('.App__signOutButton')
-    .events('click')
-    .mapTo('signedOut' as const);
-
-  return xs.merge(signIn$, signOut$);
-}
-
-function model(action$: SupabaseSource): State {
-  return action$
-    .map(([ _, session ]) => session)
-    .startWith(null);
-}
-
-function view(state$: State): View {
-  return state$
-    .map((state) => (
-      <div>
-        {state
-        ? <button attrs={{ class: 'btn btn-lg App__signOutButton' }}>ログアウト</button>
-        : <button attrs={{ class: 'btn btn-lg App__signInButton' }}>ログイン by Slack</button>
-        }
-      </div>
-    ));
-}
+type MainDOMSink = Stream<VNode>;
 
 interface Sources {
   DOM: MainDOMSource;
@@ -44,11 +11,18 @@ interface Sources {
 }
 
 interface Sinks {
-  DOM: View;
+  DOM: MainDOMSink;
   Supabase: SupabaseSink;
 } 
 
-export const App = (sources: Sources): Sinks => ({
-  DOM: view(model(sources.Supabase)),
-  Supabase: intent(sources.DOM),
-});
+export function App({ DOM, Supabase }: Sources): Sinks {
+  const sinks = NavigationBar({
+    DOM,
+    Props: Supabase.map(([ _, session ]) => ({ session })),
+  });
+
+  return ({
+    DOM: sinks.DOM,
+    Supabase: sinks.Intents,
+  });
+};

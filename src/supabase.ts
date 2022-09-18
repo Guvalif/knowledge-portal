@@ -13,7 +13,7 @@ export function makeSupabaseAuthDriver() {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ0eWdrdHNweWFheW5peWJzanlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTgzMTg0NTksImV4cCI6MTk3Mzg5NDQ1OX0.nqALZec_TEiipr12Hxdl6KnJBxSgFcF9d02BI1vTs5Y',
   );
 
-  function supabaseAuthDriver(outgoing$: SupabaseSink) {
+  function supabaseAuthDriver(outgoing$: SupabaseSink): SupabaseSource {
     outgoing$.addListener({
       next: async (action) => {
         const cases = {
