@@ -27,4 +27,14 @@ module.exports = (env, options) => ({
       chunks: 'initial',
     },
   },
+
+  devServer: {
+    static: {
+      directory: '.',
+    },
+    open: true,
+    hot: false,
+    liveReload: true,
+    port: 8080,
+  },
 });
