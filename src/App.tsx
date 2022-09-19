@@ -1,7 +1,7 @@
 import { type Stream } from 'xstream';
 import { type MainDOMSource, type VNode } from '@cycle/dom';
 import { type SupabaseSource, type SupabaseSink } from './supabase';
-import { NavigationBar } from './interaction-domain/NavigationBar';
+import { NavigationBar } from './ux-domain/NavigationBar';
 
 type MainDOMSink = Stream<VNode>;
 

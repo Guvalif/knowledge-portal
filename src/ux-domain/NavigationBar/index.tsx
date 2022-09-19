@@ -5,12 +5,12 @@ import { type Session } from '@supabase/supabase-js';
 
 function intent(dom$: MainDOMSource) {
   const signIn$ = dom$
-    .select('.App__signInButton')
+    .select('.NavigationBar__signInButton')
     .events('click')
     .mapTo('signedIn' as const);
   
   const signOut$ = dom$
-    .select('.App__signOutButton')
+    .select('.NavigationBar__signOutButton')
     .events('click')
     .mapTo('signedOut' as const);
 
@@ -57,8 +57,8 @@ interface Sinks {
 }
 
 export function NavigationBar({ DOM, Props }: Sources): Sinks {
-  return ({
+  return {
     DOM: view(model(Props)),
     Intents: intent(DOM),
-  });
+  };
 }
